@@ -1,0 +1,18 @@
+---
+version: '3.9'
+
+services:
+  ruby:
+    build: ./
+    user: '1000'
+    # working_dir: /app
+    restart: 'no'
+    tty: true
+    stdin_open: true
+    volumes:
+      - .:/app
+      - gem_cache:vendor/bundle
+
+volumes:
+  gem_cache:
+    driver: local
