@@ -1,12 +1,12 @@
 # frozen-string-literal: true
 
 require_relative 'configuration'
-require_relative 'console_proxy'
+require_relative 'logger_builder'
 
 module NamedLogger
   module Logger
     def method_missing(name, ...)
-      loggers[name] ||= build_logger(name, ...)
+      loggers[name] ||= logger_builder.new(name, ...).build(config)
     end
 
     def respond_to_missing?(name, include_private = false)
@@ -15,16 +15,10 @@ module NamedLogger
 
     def setup
       yield(config) if block_given?
-
-      config
     end
 
     def config
       Configuration.instance
-    end
-
-    def disabled?
-      config.disabled
     end
 
     private
@@ -33,29 +27,8 @@ module NamedLogger
       @loggers ||= {}
     end
 
-    def build_logger(name, *args, **kwargs)
-      return ::Logger.new(nil) if disabled?
-
-      FileUtils.mkdir_p(dirname) unless Dir.exist?(dirname)
-      filepath = File.join(dirname, filename(name))
-      logger = ::Logger.new(filepath, *args, formatter: formatter, **kwargs)
-
-      config.console_proxy ? ConsoleProxy.new(logger) : logger
-    rescue SystemCallError => e
-      warn "NamedLogger: #{e}"
-      ::Logger.new(nil)
-    end
-
-    def dirname
-      config.dirname
-    end
-
-    def filename(name)
-      config.filename.call(name, config.environment)
-    end
-
-    def formatter
-      config.formatter
+    def logger_builder
+      LoggerBuilder
     end
   end
 end
