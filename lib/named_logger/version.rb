@@ -1,15 +1,15 @@
 # frozen-string-literal: true
 
 module NamedLogger
-  MAJOR = 0
-  MINOR = 1
-  TINY  = 0
+  module Version
+    MAJOR = 0
+    MINOR = 1
+    PATCH = 0
 
-  VERSION = [MAJOR, MINOR, TINY].join('.').freeze
+    VERSION = [MAJOR, MINOR, PATCH].join('.').freeze
 
-  class << self
-    def version
-      VERSION
+    def self.extended(othermod)
+      othermod.const_set(:VERSION, VERSION)
     end
   end
 end

@@ -2,7 +2,7 @@ require_relative 'lib/named_logger/version.rb'
 
 Gem::Specification.new do |s|
   s.name        = 'named_logger'
-  s.version     = NamedLogger.version
+  s.version     = NamedLogger::VERSION
   s.summary     = 'A wrapper around the standard logger, allowing to add loggers dynamically'
   s.description = s.summary
   s.author      = 'Alexander Mandrikov'
