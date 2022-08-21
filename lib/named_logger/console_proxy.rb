@@ -1,9 +1,11 @@
 # frozen-string-literal: true
 
+require 'delegate'
+
 require_relative 'configuration'
 
 module NamedLogger
-  class ConsoleProxy < ::SimpleDelegator
+  class ConsoleProxy < SimpleDelegator
     ::Logger::Severity.constants.each do |severity|
       define_method severity.downcase do |progname = nil, &block|
         console_print(progname, block)
@@ -26,7 +28,7 @@ module NamedLogger
 
     def inspect(message)
       case message
-      when String, Symbol, Numeric, Hash, TrueClass, FalseClass
+      when String, Symbol
         message
       when Array
         message.inspect
