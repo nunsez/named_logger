@@ -1,5 +1,8 @@
 # frozen-string-literal: true
 
+require 'singleton'
+require 'logger'
+
 require_relative 'formatter'
 
 module NamedLogger
@@ -21,7 +24,7 @@ module NamedLogger
       self.level = :debug
       self.formatter = Formatter.new
       self.dirname = File.join(__dir__, 'log', 'named_logger')
-      self.filename = ->(logger_name, env = nil) { [logger_name, env, 'log'].compact.join('.') }
+      self.filename = proc { |logger_name| "#{logger_name}.log" }
 
       self.console_proxy = false
       self.console_max_message_size = 512
