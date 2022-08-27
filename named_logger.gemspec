@@ -3,8 +3,8 @@ require_relative 'lib/named_logger/version.rb'
 Gem::Specification.new do |s|
   s.name        = 'named_logger'
   s.version     = NamedLogger::VERSION
-  s.summary     = 'A wrapper around the standard logger, allowing to add loggers dynamically'
-  s.description = s.summary
+  s.summary     = 'A standard logger wrapper.'
+  s.description = 'A wrapper around the standard logger, allowing to add loggers dynamically.'
   s.author      = 'Alexander Mandrikov'
   s.email       = 'mandrikov@pm.me'
   s.files       = ['lib/named_logger.rb']
