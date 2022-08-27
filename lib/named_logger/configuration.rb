@@ -23,7 +23,7 @@ module NamedLogger
 
       self.level = :debug
       self.formatter = Formatter.new
-      self.dirname = File.join(__dir__, 'log', 'named_logger')
+      self.dirname = File.join('log', 'named_logger')
       self.filename = proc { |logger_name| "#{logger_name}.log" }
 
       self.console_proxy = false
