@@ -34,14 +34,35 @@ module NamedLogger
 
     def level=(severity)
       @level =
-        case severity.to_s.downcase
-        when 'debug'  then ::Logger::DEBUG
-        when 'info'   then ::Logger::INFO
-        when 'warn'   then ::Logger::WARN
-        when 'error'  then ::Logger::ERROR
-        when 'fatal'  then ::Logger::FATAL
-        else ::Logger::UNKNOWN
+        case severity
+        when Integer
+          integer_to_level(severity)
+        when String, Symbol
+          string_to_level(severity)
+        else
+          raise 'wrong level value format!'
         end
+    end
+
+    private
+
+    def string_to_level(severity)
+      case severity.to_s.downcase
+      when 'debug'  then ::Logger::DEBUG
+      when 'info'   then ::Logger::INFO
+      when 'warn'   then ::Logger::WARN
+      when 'error'  then ::Logger::ERROR
+      when 'fatal'  then ::Logger::FATAL
+      else ::Logger::UNKNOWN
+      end
+    end
+
+    def integer_to_level(severity)
+      if Range.new(::Logger::DEBUG, ::Logger::UNKNOWN).cover?(severity)
+        severity
+      else
+        ::Logger::UNKNOWN
+      end
     end
   end
 end
