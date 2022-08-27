@@ -10,4 +10,6 @@ Gem::Specification.new do |s|
   s.files       = ['lib/named_logger.rb']
   s.homepage    = 'https://github.com/nunsez/named_logger.git'
   s.license     = 'Apache-2.0'
+
+  s.required_ruby_version = '>= 3.0', '< 4'
 end
