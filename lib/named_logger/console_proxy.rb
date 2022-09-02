@@ -39,7 +39,8 @@ module NamedLogger
     end
 
     def max_message_size
-      Configuration.instance.console_max_message_size
+      512
+      # __getobj__.instance_variable_get(:@named_config).console_max_message_size
     end
   end
 end

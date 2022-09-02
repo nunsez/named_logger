@@ -1,14 +1,11 @@
 # frozen-string-literal: true
 
-require 'singleton'
 require 'logger'
 
 require_relative 'formatter'
 
 module NamedLogger
   class Configuration
-    include Singleton
-
     attr_accessor :disabled, :formatter, :console_max_message_size,
                   :console_proxy, :dirname, :filename
 

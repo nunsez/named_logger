@@ -30,6 +30,8 @@ module NamedLogger
         **kwargs
       )
 
+      # logger.instance_variable_set(:@named_config, config)
+
       config.console_proxy ? console_proxy.new(logger) : logger
     rescue SystemCallError => e
       warn "NamedLogger: #{e}"
