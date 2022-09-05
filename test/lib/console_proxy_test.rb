@@ -34,7 +34,7 @@ class ConsoleProxyTest < Minitest::Test
     end
   end
 
-  def test_stdout_when_disabled
+  def test_stdout_when_console_disabled
     config = NamedLogger::Configuration.new(disabled: true, console_proxy: false)
     logger = NamedLogger::LoggerBuilder.new(nil, config: config)
 
