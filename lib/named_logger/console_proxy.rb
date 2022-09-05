@@ -3,11 +3,14 @@
 require 'delegate'
 
 require_relative 'configuration'
+require_relative 'severity'
 
 module NamedLogger
   class ConsoleProxy < SimpleDelegator
     ::Logger::Severity.constants.each do |severity|
       define_method severity.downcase do |progname = nil, &block|
+    Severity.methods.each do |method|
+      define_method method do |progname = nil, &block|
         console_print(progname, block)
 
         super(progname, &block)
