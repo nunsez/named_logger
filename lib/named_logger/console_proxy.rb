@@ -7,8 +7,11 @@ require_relative 'severity'
 
 module NamedLogger
   class ConsoleProxy < SimpleDelegator
-    ::Logger::Severity.constants.each do |severity|
-      define_method severity.downcase do |progname = nil, &block|
+    def initialize(logger, **kwargs)
+      @config = kwargs.fetch(:config) { Configuration.new }
+      __setobj__ logger
+    end
+
     Severity.methods.each do |method|
       define_method method do |progname = nil, &block|
         console_print(progname, block)
@@ -18,6 +21,8 @@ module NamedLogger
     end
 
     private
+
+    attr_reader :config
 
     def console_print(progname = nil, block = nil)
       if !progname.nil? && block
@@ -42,8 +47,7 @@ module NamedLogger
     end
 
     def max_message_size
-      512
-      # __getobj__.instance_variable_get(:@named_config).console_max_message_size
+      config.console_max_message_size
     end
   end
 end
