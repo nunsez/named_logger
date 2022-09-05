@@ -2,37 +2,44 @@
 
 require 'logger'
 require 'fileutils'
+require 'forwardable'
 
+require_relative 'configuration'
 require_relative 'console_proxy'
+require_relative 'severity'
 
 module NamedLogger
   class LoggerBuilder
-    attr_reader :name, :args, :kwargs, :config
+    extend Forwardable
+
+    attr_reader :name, :args, :kwargs, :logger, :config
+
+    def_instance_delegators :logger, *Severity.methods, :formatter
 
     def initialize(name, *args, **kwargs)
       @name = name
       @args = args
-      @kwargs = kwargs
+      @config = kwargs.fetch(:config) { Configuration.new }
+      @kwargs = kwargs.except(:config)
+
+      @logger = build_logger
     end
 
-    def build(config)
-      return logger_stub if config.disabled
+    def build_logger
+      current_logger = config.disabled ? logger_stub : logger_device
+      config.console_proxy ? console_proxy.new(current_logger, config: config) : current_logger
+    end
 
-      @config = config
-
+    def logger_device
       ensure_directory_existence
 
-      logger = ::Logger.new(
+      logger_base.new(
         filepath,
         *args,
         formatter: config.formatter,
         level: config.level,
         **kwargs
       )
-
-      # logger.instance_variable_set(:@named_config, config)
-
-      config.console_proxy ? console_proxy.new(logger) : logger
     rescue SystemCallError => e
       warn "NamedLogger: #{e}"
       logger_stub
@@ -43,7 +50,7 @@ module NamedLogger
     end
 
     def filepath
-      filepath = File.join(dirname, filename(name))
+      File.join(dirname, filename(name))
     end
 
     def dirname
@@ -55,7 +62,11 @@ module NamedLogger
     end
 
     def logger_stub
-      ::Logger.new(nil)
+      logger_base.new(nil)
+    end
+
+    def logger_base
+      ::Logger
     end
 
     def console_proxy
