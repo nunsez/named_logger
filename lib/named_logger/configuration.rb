@@ -3,6 +3,7 @@
 require 'logger'
 
 require_relative 'formatter'
+require_relative 'severity'
 
 module NamedLogger
   class Configuration
@@ -11,8 +12,16 @@ module NamedLogger
 
     attr_reader :level
 
-    def initialize
+    def initialize(**kwargs)
       set_defaults
+      assign_init_settings(kwargs)
+    end
+
+    def assign_init_settings(settings)
+      settings.each do |property, value|
+        method = "#{property}=".to_sym
+        public_send(method, value)
+      end
     end
 
     def set_defaults
@@ -45,20 +54,20 @@ module NamedLogger
 
     def string_to_level(severity)
       case severity.to_s.downcase
-      when 'debug'  then ::Logger::DEBUG
-      when 'info'   then ::Logger::INFO
-      when 'warn'   then ::Logger::WARN
-      when 'error'  then ::Logger::ERROR
-      when 'fatal'  then ::Logger::FATAL
-      else ::Logger::UNKNOWN
+      when 'debug'  then Severity::DEBUG
+      when 'info'   then Severity::INFO
+      when 'warn'   then Severity::WARN
+      when 'error'  then Severity::ERROR
+      when 'fatal'  then Severity::FATAL
+      else Severity::UNKNOWN
       end
     end
 
     def integer_to_level(severity)
-      if Range.new(::Logger::DEBUG, ::Logger::UNKNOWN).cover?(severity)
+      if Range.new(Severity::DEBUG, Severity::UNKNOWN).cover?(severity)
         severity
       else
-        ::Logger::UNKNOWN
+        Severity::UNKNOWN
       end
     end
   end

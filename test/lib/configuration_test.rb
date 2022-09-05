@@ -52,4 +52,11 @@ class ConfigurationTest < Minitest::Test
   def test_default_filename_proc
     assert_equal 'foo.log', @config.filename.call('foo')
   end
+
+  def test_assign_init_settings
+    config = NamedLogger::Configuration.new(disabled: true, level: :fatal)
+
+    assert config.disabled
+    assert_equal NamedLogger::Severity::FATAL, config.level
+  end
 end
