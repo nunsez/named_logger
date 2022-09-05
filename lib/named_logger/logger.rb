@@ -4,10 +4,9 @@ require_relative 'configuration'
 require_relative 'logger_builder'
 
 module NamedLogger
-  # rewrite to class
   module Logger
-    def method_missing(name, ...)
-      loggers[name] ||= logger_builder.new(name, ...).build(config)
+    def method_missing(name, *args, **kwargs)
+      loggers[name] ||= build_logger(name, *args, **kwargs)
     end
 
     def respond_to_missing?(name, include_private = false)
@@ -28,8 +27,8 @@ module NamedLogger
       @loggers ||= {}
     end
 
-    def logger_builder
-      LoggerBuilder
+    def build_logger(name, *args, **kwargs)
+      LoggerBuilder.new(name, *args, config: config, **kwargs)
     end
   end
 end
