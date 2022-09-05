@@ -8,12 +8,12 @@ class ConfigurationTest < Minitest::Test
   def setup
     super
 
-    @config = NamedLogger.config
+    @config = NamedLogger::Configuration.new(disabled: true)
   end
 
   def test_same_config
     otherconfig = NamedLogger.config
-    assert_equal @config, otherconfig
+    assert_equal otherconfig, NamedLogger.config
   end
 
   def test_level_assign_string
