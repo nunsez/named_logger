@@ -1,7 +1,6 @@
 # frozen-string-literal: true
 
-require_relative '../test_helper'
-require_relative '../../lib/named_logger'
+require 'test_helper'
 
 class ConfigurationTest < Minitest::Test
   def setup

@@ -1,9 +1,7 @@
 # frozen-string-literal: true
 
 require 'logger'
-
-require_relative '../test_helper'
-require_relative '../../lib/named_logger'
+require 'test_helper'
 
 class ConsoleProxyTest < Minitest::Test
   def test_stdout
