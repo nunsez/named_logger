@@ -3,6 +3,8 @@
 require 'test_helper'
 
 class ConfigurationTest < Minitest::Test
+  include NamedLogger::Severity
+
   def setup
     super
 
@@ -16,22 +18,22 @@ class ConfigurationTest < Minitest::Test
 
   def test_level_assign_string
     @config.level = :foo
-    assert_equal 5, @config.level
+    assert_equal UNKNOWN, @config.level
 
     @config.level = 'fatal'
-    assert_equal 4, @config.level
+    assert_equal FATAL, @config.level
 
     @config.level = 'ERROR'
-    assert_equal 3, @config.level
+    assert_equal ERROR, @config.level
 
     @config.level = 'Warn'
-    assert_equal 2, @config.level
+    assert_equal WARN, @config.level
 
     @config.level = :Info
-    assert_equal 1, @config.level
+    assert_equal INFO, @config.level
 
     @config.level = :debug
-    assert_equal 0, @config.level
+    assert_equal DEBUG, @config.level
   end
 
   def test_level_assign_integer
@@ -57,6 +59,6 @@ class ConfigurationTest < Minitest::Test
     config = NamedLogger::Configuration.new(disabled: true, level: :fatal)
 
     assert config.disabled
-    assert_equal NamedLogger::Severity::FATAL, config.level
+    assert_equal FATAL, config.level
   end
 end
