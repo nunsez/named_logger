@@ -7,6 +7,8 @@ require_relative 'severity'
 
 module NamedLogger
   class Configuration
+    include Severity
+
     attr_accessor :disabled, :formatter, :console_max_message_size,
                   :console_proxy, :dirname, :filename
 
@@ -54,20 +56,20 @@ module NamedLogger
 
     def string_to_level(severity)
       case severity.to_s.downcase
-      when 'debug'  then Severity::DEBUG
-      when 'info'   then Severity::INFO
-      when 'warn'   then Severity::WARN
-      when 'error'  then Severity::ERROR
-      when 'fatal'  then Severity::FATAL
-      else Severity::UNKNOWN
+      when 'debug'  then DEBUG
+      when 'info'   then INFO
+      when 'warn'   then WARN
+      when 'error'  then ERROR
+      when 'fatal'  then FATAL
+      else UNKNOWN
       end
     end
 
     def integer_to_level(severity)
-      if Range.new(Severity::DEBUG, Severity::UNKNOWN).cover?(severity)
+      if Range.new(DEBUG, UNKNOWN).cover?(severity)
         severity
       else
-        Severity::UNKNOWN
+        UNKNOWN
       end
     end
   end
