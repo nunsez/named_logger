@@ -14,7 +14,7 @@ module NamedLogger
 
     attr_reader :name, :args, :kwargs, :logger, :config
 
-    def_instance_delegators :logger, *Severity.methods, :formatter
+    def_instance_delegators :logger, *Severity.methods, :formatter, :level
 
     def initialize(name, *args, **kwargs)
       @name = name
