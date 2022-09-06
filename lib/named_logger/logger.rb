@@ -41,7 +41,7 @@ module NamedLogger
         **kwargs
       )
     rescue SystemCallError => e
-      warn "NamedLogger: #{e}"
+      Kernel::warn "NamedLogger: #{e}"
       logger_stub
     end
 
