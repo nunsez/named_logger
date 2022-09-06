@@ -1,5 +1,13 @@
 # frozen-string-literal: true
 
+if ENV['COVERAGE']
+  require 'simplecov'
+
+  SimpleCov.start do
+    add_filter '/test/'
+  end
+end
+
 require 'fileutils'
 require 'minitest/autorun'
 require 'named_logger'
