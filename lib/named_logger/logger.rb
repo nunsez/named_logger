@@ -45,6 +45,10 @@ module NamedLogger
       logger_stub
     end
 
+    def logger_stub
+      logger_base.new(nil)
+    end
+
     def ensure_directory_existence
       FileUtils.mkdir_p(dirname) unless Dir.exist?(dirname)
     end
@@ -59,10 +63,6 @@ module NamedLogger
 
     def filename(name)
       config.filename.call(name)
-    end
-
-    def logger_stub
-      logger_base.new(nil)
     end
 
     def logger_base
