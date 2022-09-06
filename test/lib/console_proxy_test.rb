@@ -3,6 +3,12 @@
 require 'test_helper'
 
 class ConsoleProxyTest < Minitest::Test
+  class CustomVarLength
+    def initialize(len)
+      @foo = 'bar ' * len
+    end
+  end
+
   def test_stdout
     config = NamedLogger::Configuration.new(disabled: true, console_proxy: true)
     logger = NamedLogger::Logger.new(nil, config: config)
@@ -22,14 +28,9 @@ class ConsoleProxyTest < Minitest::Test
                                             console_proxy: true,
                                             console_max_message_size: length)
     logger = NamedLogger::Logger.new(nil, config: config)
-    obj = Class.new do
-      def initialize(len)
-        @foo = 'bar ' * len
-      end
-    end.new(length)
 
     assert_output(/.{,#{length}}/) do
-      logger.info(obj)
+      logger.info(CustomVarLength.new(length))
     end
   end
 
