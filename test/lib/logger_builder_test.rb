@@ -23,12 +23,19 @@ class LoggerTest < Minitest::Test
   end
 
   def test_write_to_file
-    logger = NamedLogger.baz(config: temp_logger_config)
+    logger = NamedLogger.file_writer(config: temp_logger_config)
     message = rand(100)
 
     logger.debug('rand') { message }
 
     log_content = File.read(logger.filepath)
     assert_match(/DEBUG -- rand: #{message}/, log_content)
+  end
+
+  def test_respond_to_logger_name
+    config = NamedLogger::Configuration.new(disabled: true)
+    NamedLogger.random_name(config: config)
+
+    assert_operator NamedLogger, :respond_to?, :random_name
   end
 end
