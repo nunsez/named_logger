@@ -26,7 +26,7 @@ module NamedLogger
     end
 
     def build_logger
-      current_logger = config.disabled ? logger_stub : logger_device
+      current_logger = config.disabled || name.nil? ? logger_stub : logger_device
       config.console_proxy ? console_proxy.new(current_logger, config: config) : current_logger
     end
 
