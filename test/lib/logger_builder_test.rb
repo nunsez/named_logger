@@ -1,7 +1,6 @@
 # frozen-string-literal: true
 
 require 'test_helper'
-require 'securerandom'
 
 class LoggerTest < Minitest::Test
   def test_config_respects_global_parameters
@@ -24,17 +23,12 @@ class LoggerTest < Minitest::Test
   end
 
   def test_write_to_file
-    config = NamedLogger::Configuration.new
-    config.dirname = File.join(Dir.tmpdir, 'named_logger')
-    tmp_name = SecureRandom.hex
-    config.filename = proc { tmp_name }
+    logger = NamedLogger.baz(config: temp_logger_config)
+    message = rand(100)
 
-    logger = NamedLogger.baz(config: config)
-    message = SecureRandom.uuid
-
-    logger.debug('uuid') { message }
+    logger.debug('rand') { message }
 
     log_content = File.read(logger.filepath)
-    assert_match(/DEBUG -- uuid: #{message}/, log_content)
+    assert_match(/DEBUG -- rand: #{message}/, log_content)
   end
 end
