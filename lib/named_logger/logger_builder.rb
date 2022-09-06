@@ -1,76 +1,34 @@
 # frozen-string-literal: true
 
-require 'logger'
-require 'fileutils'
-require 'forwardable'
-
 require_relative 'configuration'
-require_relative 'console_proxy'
-require_relative 'severity'
+require_relative 'logger'
 
 module NamedLogger
-  class LoggerBuilder
-    extend Forwardable
-
-    attr_reader :name, :args, :kwargs, :logger, :config
-
-    def_instance_delegators :logger, *Severity.methods, :formatter
-
-    def initialize(name, *args, **kwargs)
-      @name = name
-      @args = args
-      @config = kwargs.fetch(:config) { Configuration.new }
-      @kwargs = kwargs.except(:config)
-
-      @logger = build_logger
+  module LoggerBuilder
+    def method_missing(name, *args, **kwargs)
+      loggers[name] ||= build_logger(name, *args, **kwargs)
     end
 
-    def build_logger
-      current_logger = config.disabled ? logger_stub : logger_device
-      config.console_proxy ? console_proxy.new(current_logger, config: config) : current_logger
+    def respond_to_missing?(name, include_private = false)
+      loggers.key?(name) || super
     end
 
-    def logger_device
-      ensure_directory_existence
-
-      logger_base.new(
-        filepath,
-        *args,
-        formatter: config.formatter,
-        level: config.level,
-        **kwargs
-      )
-    rescue SystemCallError => e
-      warn "NamedLogger: #{e}"
-      logger_stub
+    def setup
+      yield(config) if block_given?
     end
 
-    def ensure_directory_existence
-      FileUtils.mkdir_p(dirname) unless Dir.exist?(dirname)
+    def config
+      @config ||= Configuration.new
     end
 
-    def filepath
-      File.join(dirname, filename(name))
+    private
+
+    def loggers
+      @loggers ||= {}
     end
 
-    def dirname
-      config.dirname
-    end
-
-    def filename(name)
-      config.filename.call(name)
-    end
-
-    def logger_stub
-      logger_base.new(nil)
-    end
-
-    def logger_base
-      ::Logger
-    end
-
-    def console_proxy
-      ConsoleProxy
+    def build_logger(name, *args, **kwargs)
+      Logger.new(name, *args, config: config, **kwargs)
     end
   end
 end
