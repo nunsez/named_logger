@@ -7,8 +7,8 @@ class ConsoleProxyTest < Minitest::Test
     config = NamedLogger::Configuration.new(disabled: true, console_proxy: true)
     logger = NamedLogger::Logger.new(nil, config: config)
 
-    assert_output("foo\n") do
-      logger.debug { 'foo' }
+    assert_output("[1, 2, 3]\n") do
+      logger.debug { [1, 2, 3] }
     end
 
     assert_output("foo: {}\n") do
