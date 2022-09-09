@@ -61,4 +61,11 @@ class ConfigurationTest < Minitest::Test
     assert config.disabled
     assert_equal FATAL, config.level
   end
+
+  def test_assign_method
+    config = NamedLogger::Configuration.new
+
+    config.assign({level: :unknown})
+    assert_equal UNKNOWN, config.level
+  end
 end

@@ -14,16 +14,20 @@ module NamedLogger
 
     attr_reader :level
 
-    def initialize(**kwargs)
+    def initialize(**settings)
       set_defaults
-      assign_init_settings(kwargs)
+      assign(settings)
     end
 
-    def assign_init_settings(settings)
+    def assign(settings)
       settings.each do |property, value|
         method = "#{property}=".to_sym
         public_send(method, value)
+      rescue NoMethodError
+        # do nothing
       end
+
+      self
     end
 
     def set_defaults
