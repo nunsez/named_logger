@@ -22,6 +22,8 @@ module NamedLogger
       @config = kwargs.fetch(:config) { Configuration.new }
       @kwargs = kwargs.except(:config)
 
+      config.assign(@kwargs)
+
       @logger = build_logger
     end
 
