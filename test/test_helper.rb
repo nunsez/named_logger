@@ -22,14 +22,25 @@ class Minitest::Test
     NamedLogger.config.disabled = true
   end
 
+  def test_builder(**options)
+    Module.new.tap do |mod|
+      mod.extend(NamedLogger::LoggerBuilder)
+
+      mod.setup do |config|
+        config.disabled = true # disabled by default
+        config.dirname = tmp_dirname
+        config.assign(options)
+      end
+    end
+  end
+
   def temp_logger_config
-    config = NamedLogger::Configuration.new
-    config.dirname = tmp_dirname
+    NamedLogger::Configuration.new.tap do |config|
+      config.dirname = tmp_dirname
 
-    tmp_name = SecureRandom.hex
-    config.filename = proc { tmp_name }
-
-    config
+      fixed_tmp_name = SecureRandom.hex
+      config.filename = proc { fixed_tmp_name }
+    end
   end
 
   def tmp_dirname
