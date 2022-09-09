@@ -4,26 +4,23 @@ require 'test_helper'
 
 class LoggerTest < Minitest::Test
   def test_config_respects_global_parameters
-    NamedLogger.setup do |config|
-      config.disabled = true
-      config.level = :fatal
-    end
+    builder = test_builder(level: :fatal)
+    logger = builder.foo
 
-    logger = NamedLogger.foo
-
-    assert_equal 4, NamedLogger.config.level
-    assert_equal 4, logger.config.level
+    assert_equal NamedLogger::Severity::FATAL, builder.config.level
+    assert_equal builder.config.level, logger.config.level
   end
 
   def test_config_respects_init_parameters
-    config = NamedLogger::Configuration.new(disabled: true)
-    logger = NamedLogger.bar(config: config)
+    builder = test_builder(disabled: false, level: :fatal)
+    logger = builder.foo(level: :info)
 
-    assert logger.config.disabled
+    assert_equal NamedLogger::Severity::INFO, logger.config.level
+    assert_equal logger.config.level, logger.level
   end
 
   def test_write_to_file
-    logger = NamedLogger.file_writer(config: temp_logger_config)
+    logger = test_builder.file_writer(config: temp_logger_config)
     message = rand(100)
 
     logger.debug('rand') { message }
@@ -33,9 +30,9 @@ class LoggerTest < Minitest::Test
   end
 
   def test_respond_to_logger_name
-    config = NamedLogger::Configuration.new(disabled: true)
-    NamedLogger.random_name(config: config)
+    builder = test_builder
+    builder.random_name
 
-    assert_operator NamedLogger, :respond_to?, :random_name
+    assert_operator builder, :respond_to?, :random_name
   end
 end

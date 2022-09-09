@@ -12,7 +12,7 @@ class FormatterTest < Minitest::Test
   def test_custom_formatter
     config = temp_logger_config
     config.formatter = CustomFormatter.new
-    logger = NamedLogger::Logger.new('qux', config: config)
+    logger = test_builder.test(config: config)
 
     logger.info('progname') { 'message!' }
     log_content = File.read(logger.filepath)

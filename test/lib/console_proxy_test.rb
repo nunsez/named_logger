@@ -10,8 +10,7 @@ class ConsoleProxyTest < Minitest::Test
   end
 
   def test_stdout
-    config = NamedLogger::Configuration.new(disabled: true, console_proxy: true)
-    logger = NamedLogger::Logger.new(nil, config: config)
+    logger = test_builder(console_proxy: true).test
 
     assert_output("[1, 2, 3]\n") do
       logger.debug { [1, 2, 3] }
@@ -24,10 +23,7 @@ class ConsoleProxyTest < Minitest::Test
 
   def test_stdout_length
     length = 100
-    config = NamedLogger::Configuration.new(disabled: true,
-                                            console_proxy: true,
-                                            console_max_message_size: length)
-    logger = NamedLogger::Logger.new(nil, config: config)
+    logger = test_builder(console_proxy: true, console_max_message_size: length).test
 
     assert_output(/.{,#{length}}/) do
       logger.info(CustomVarLength.new(length))
@@ -35,9 +31,7 @@ class ConsoleProxyTest < Minitest::Test
   end
 
   def test_stdout_when_console_disabled
-    config = NamedLogger::Configuration.new(disabled: true, console_proxy: false)
-    logger = NamedLogger::Logger.new(nil, config: config)
-
+    logger = test_builder(console_proxy: false).test
     assert_silent { logger.info('foo') }
   end
 end
