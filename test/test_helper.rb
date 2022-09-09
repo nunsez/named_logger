@@ -16,12 +16,6 @@ require 'securerandom'
 class Minitest::Test
   parallelize_me!
 
-  def setup
-    super
-
-    NamedLogger.config.disabled = true
-  end
-
   def test_builder(**options)
     Module.new.tap do |mod|
       mod.extend(NamedLogger::LoggerBuilder)
