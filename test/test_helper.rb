@@ -16,6 +16,8 @@ require 'securerandom'
 class Minitest::Test
   parallelize_me!
 
+  # This method creates an instance of the module for better parallel testing.
+  # Use it instead of NamedLogger from lib directory.
   def test_builder(**options)
     Module.new.tap do |mod|
       mod.extend(NamedLogger::LoggerBuilder)
