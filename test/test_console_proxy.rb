@@ -1,6 +1,6 @@
 # frozen-string-literal: true
 
-require_relative 'helper'
+require 'helper'
 
 class TestConsoleProxy < Minitest::Test
   class CustomVarLength

@@ -1,6 +1,6 @@
 # frozen-string-literal: true
 
-require_relative 'helper'
+require 'helper'
 
 class TestLoggerBuilder < Minitest::Test
   def test_config_respects_global_parameters

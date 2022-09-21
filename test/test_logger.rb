@@ -1,6 +1,6 @@
 # frozen-string-literal: true
 
-require_relative 'helper'
+require 'helper'
 
 class TestLogger < Minitest::Test
   def test_respects_init_parameters

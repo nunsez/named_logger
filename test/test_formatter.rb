@@ -1,6 +1,6 @@
 # frozen-string-literal: true
 
-require_relative 'helper'
+require 'helper'
 
 class TestFormatter < Minitest::Test
   class CustomFormatter < NamedLogger::Formatter

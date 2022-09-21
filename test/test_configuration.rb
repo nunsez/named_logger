@@ -1,6 +1,6 @@
 # frozen-string-literal: true
 
-require_relative 'helper'
+require 'helper'
 
 class TestConfiguration < Minitest::Test
   include NamedLogger::Severity
