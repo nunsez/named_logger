@@ -1,11 +1,11 @@
 # frozen-string-literal: true
 
-require 'test_helper'
+require_relative 'helper'
 
-class LoggerTest < Minitest::Test
+class TestLogger < Minitest::Test
   def test_respects_init_parameters
     init_formatter = proc { 0 }
-    named_logger = test_builder(disabled: false, level: 3, formatter: proc { 1 })
+    named_logger = logger_builder(disabled: false, level: 3, formatter: proc { 1 })
     logger = named_logger.foo(level: 4, formatter: init_formatter)
 
     assert_equal init_formatter, logger.formatter
@@ -14,7 +14,7 @@ class LoggerTest < Minitest::Test
 
   def test_creates_dir_if_not_exist
     dirname = build_non_existent_temp_dirname
-    logger = test_builder(dirname: dirname, disabled: false).test
+    logger = logger_builder(dirname: dirname, disabled: false).test
 
     assert_path_exists logger.dirname
   end
@@ -22,24 +22,24 @@ class LoggerTest < Minitest::Test
   def test_build_correct_filepath
     filename = proc { 'n!' }
     dirname = File.join(tmp_dirname, 'foo')
-    logger = test_builder(filename: filename, dirname: dirname).test
+    logger = logger_builder(filename: filename, dirname: dirname).test
 
     expected_filepath = File.join(dirname, 'n!')
     assert_equal expected_filepath, logger.filepath
   end
 
   def test_with_console_proxy
-    logger = test_builder(console_proxy: true).test
+    logger = logger_builder(console_proxy: true).test
     assert_instance_of NamedLogger::ConsoleProxy, logger.logger
   end
 
   def test_without_console_proxy
-    logger = test_builder(console_proxy: false).test
+    logger = logger_builder(console_proxy: false).test
     refute_instance_of NamedLogger::ConsoleProxy, logger.logger
   end
 
   def test_disabled_logger_in_config_not_create_file
-    logger = test_builder(disabled: true).test
+    logger = logger_builder(disabled: true).test
     refute_path_exists logger.filepath
   end
 
@@ -51,7 +51,7 @@ class LoggerTest < Minitest::Test
   end
 
   def test_catch_sysacll_err_with_logger_stub
-    named_logger = test_builder(disabled: false, dirname: forbidden_dir)
+    named_logger = logger_builder(disabled: false, dirname: forbidden_dir)
 
     assert_output(nil, /Permission denied/) do
       named_logger.noway

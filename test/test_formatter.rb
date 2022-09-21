@@ -1,8 +1,8 @@
 # frozen-string-literal: true
 
-require 'test_helper'
+require_relative 'helper'
 
-class FormatterTest < Minitest::Test
+class TestFormatter < Minitest::Test
   class CustomFormatter < NamedLogger::Formatter
     def call(severity, time, progname, message)
       "#{message}:#{progname}\n"
@@ -12,7 +12,7 @@ class FormatterTest < Minitest::Test
   def test_custom_formatter
     config = temp_logger_config
     config.formatter = CustomFormatter.new
-    logger = test_builder.test(config: config)
+    logger = logger_builder.test(config: config)
 
     logger.info('progname') { 'message!' }
     log_content = File.read(logger.filepath)

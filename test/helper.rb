@@ -18,7 +18,7 @@ class Minitest::Test
 
   # This method creates an instance of the module for better parallel testing.
   # Use it instead of NamedLogger from lib directory.
-  def test_builder(**options)
+  def logger_builder(**options)
     Module.new.tap do |mod|
       mod.extend(NamedLogger::LoggerBuilder)
 
@@ -39,10 +39,6 @@ class Minitest::Test
     end
   end
 
-  def tmp_dirname
-    File.join(Dir.tmpdir, 'named_logger')
-  end
-
   def forbidden_dir
     dirname = File.join(tmp_dirname, 'forbidden')
     Dir.mkdir(dirname) unless Dir.exist?(dirname)
@@ -52,7 +48,11 @@ class Minitest::Test
 
   def build_non_existent_temp_dirname
     dirname = File.join(tmp_dirname, 'nonexistent', rand(100).to_s, rand(100).to_s)
-    FileUtils.remove_dir(somedir) if Dir.exist?(dirname)
+    FileUtils.remove_dir(dirname) if Dir.exist?(dirname)
     dirname
+  end
+
+  def tmp_dirname
+    File.join(Dir.tmpdir, 'named_logger')
   end
 end

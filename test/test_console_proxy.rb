@@ -1,8 +1,8 @@
 # frozen-string-literal: true
 
-require 'test_helper'
+require_relative 'helper'
 
-class ConsoleProxyTest < Minitest::Test
+class TestConsoleProxy < Minitest::Test
   class CustomVarLength
     def initialize(len)
       @foo = 'bar ' * len
@@ -10,7 +10,7 @@ class ConsoleProxyTest < Minitest::Test
   end
 
   def test_stdout
-    logger = test_builder(console_proxy: true).test
+    logger = logger_builder(console_proxy: true).test
 
     assert_output("[1, 2, 3]\n") do
       logger.debug { [1, 2, 3] }
@@ -23,7 +23,7 @@ class ConsoleProxyTest < Minitest::Test
 
   def test_stdout_length
     length = 100
-    logger = test_builder(console_proxy: true, console_max_message_size: length).test
+    logger = logger_builder(console_proxy: true, console_max_message_size: length).test
 
     assert_output(/.{,#{length}}/) do
       logger.info(CustomVarLength.new(length))
@@ -31,7 +31,7 @@ class ConsoleProxyTest < Minitest::Test
   end
 
   def test_stdout_when_console_disabled
-    logger = test_builder(console_proxy: false).test
+    logger = logger_builder(console_proxy: false).test
     assert_silent { logger.info('foo') }
   end
 end
