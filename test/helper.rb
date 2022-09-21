@@ -40,19 +40,20 @@ class Minitest::Test
   end
 
   def forbidden_dir
-    dirname = File.join(tmp_dirname, 'forbidden')
-    Dir.mkdir(dirname) unless Dir.exist?(dirname)
-    FileUtils.chmod(0400, dirname)
-    dirname
+    File.join(tmp_dirname, 'forbidden').tap do |dirname|
+      FileUtils.mkdir(dirname, mode: 0400) unless Dir.exist?(dirname)
+    end
   end
 
   def build_non_existent_temp_dirname
-    dirname = File.join(tmp_dirname, 'nonexistent', rand(100).to_s, rand(100).to_s)
-    FileUtils.remove_dir(dirname) if Dir.exist?(dirname)
-    dirname
+    File.join(tmp_dirname, 'nonexistent').tap do |dirname|
+      FileUtils.remove_dir(dirname) if Dir.exist?(dirname)
+    end
   end
 
   def tmp_dirname
-    File.join(Dir.tmpdir, 'named_logger')
+    File.join(Dir.tmpdir, 'named_logger').tap do |dirname|
+      FileUtils.mkdir_p(dirname)
+    end
   end
 end
