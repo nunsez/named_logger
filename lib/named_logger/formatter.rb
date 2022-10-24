@@ -4,12 +4,11 @@ require 'logger'
 
 module NamedLogger
   class Formatter < ::Logger::Formatter
-    def initialize
-      super
+    LOG_FORMAT = "[%s] %5s -- %s: %s\n"
+    DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 
-      # TODO replace format to DatetimeFormat constant and delete last space
-      # https://github.com/ruby/ruby/commit/a8b11b5cdd5fedd30a65e60bdae4c00d259d4191
-      @datetime_format = '%Y-%m-%d %H:%M:%S '
+    def call(severity, time, progname, message)
+      format(LOG_FORMAT, time.strftime(DATETIME_FORMAT), severity, progname, msg2str(message))
     end
   end
 end
